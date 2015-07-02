@@ -95,7 +95,9 @@ class InterfaceController < WKInterfaceController
 
   def update
     unless @updating
+      WKInterfaceDevice.currentDevice.playHaptic(WKHapticTypeStart)
       @updating = true
+
       originalPrice = @tracker.cachedPrice
       @tracker.requestPrice do |newPrice, error|
         if error.nil?
@@ -103,6 +105,8 @@ class InterfaceController < WKInterfaceController
           updateDate(NSDate.date)
           updateImage(originalPrice, newPrice)
         end
+
+        WKInterfaceDevice.currentDevice.playHaptic(WKHapticTypeStop)
         @updating = false
       end
     end
