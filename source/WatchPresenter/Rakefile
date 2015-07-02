@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+$:.unshift("/Library/RubyMotion-watchos-beta/lib")
+require 'motion/project/template/ios'
+
+begin
+  require 'bundler'
+  Bundler.require
+rescue LoadError
+end
+
+Motion::Project::App.setup do |app|
+  app.name = 'WatchPresenter'
+  app.version = '1.0'
+  app.short_version = '1.0'
+  app.identifier = "com.rubymotion.#{app.name}"
+  app.icons << 'icon.png'
+  app.target 'WatchApp', :watchapp
+  app.info_plist['NSAppTransportSecurity'] = { 'NSAllowsArbitraryLoads' => true }
+  app.archs['iPhoneOS'] = ['armv7']
+  app.archs['WatchOS'] = ['armv7']
+  app.codesign_certificate = ENV['WILDCARD_CERTIFICATE']
+  app.provisioning_profile = ENV['WILDCARD_PROVISIONING_PROFILE_PATH']
+end

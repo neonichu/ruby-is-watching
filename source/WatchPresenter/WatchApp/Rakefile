@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+$:.unshift("/Library/RubyMotion-watchos-beta/lib")
+require 'motion/project/template/ios-watch-extension'
+
+begin
+  require 'bundler'
+  Bundler.require
+rescue LoadError
+end
+
+Motion::Project::App.setup do |app|
+  app.codesign_certificate = ENV['WILDCARD_CERTIFICATE']
+  app.provisioning_profile = ENV['WILDCARD_PROVISIONING_PROFILE_PATH']
+  app.watch_app_config.codesign_certificate = app.codesign_certificate
+  app.watch_app_config.provisioning_profile = app.provisioning_profile
+  app.sdk_version = '2.0'
+  app.deployment_target = '2.0'
+  app.info_plist['NSAppTransportSecurity'] = { 'NSAllowsArbitraryLoads' => true }
+  app.archs['WatchOS'] = ['armv7k']
+  app.archs['WatchSimulator'] = ['i386']
+end
+
+require 'ib/tasks'
+
+IB::RakeTask.new do |project|
+  project.resource_directories = ['watch_app']
+end
